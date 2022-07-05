@@ -1,6 +1,6 @@
 {
   "name": "@kaffee/doppio",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "doppio is headless browser check util",
   "main": "dist/cjs/index.js",
   "types": "dist/typings/index.d.ts",
@@ -18,8 +18,10 @@
   "license": "GPLV3",
   "devDependencies": {
     "@types/node": "^16",
+    "javascript-obfuscator": "^4.0.0",
     "rollup": "^2.75.7",
     "rollup-plugin-dts": "^4.2.2",
+    "rollup-plugin-obfuscator": "^0.2.2",
     "rollup-plugin-typescript2": "^0.32.1",
     "ts-node": "^10.8.2",
     "tslib": "^2.4.0",
