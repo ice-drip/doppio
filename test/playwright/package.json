@@ -11,5 +11,8 @@
   "license": "ISC",
   "devDependencies": {
     "@playwright/test": "^1.23.1"
+  },
+  "dependencies": {
+    "@kaffee/doppio": "workspace:^1.0.1"
   }
 }

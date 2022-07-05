@@ -22,7 +22,10 @@ importers:
 
   test/playwright:
     specifiers:
+      '@kaffee/doppio': workspace:^1.0.1
       '@playwright/test': ^1.23.1
+    dependencies:
+      '@kaffee/doppio': link:../../packages/doppio
     devDependencies:
       '@playwright/test': 1.23.1
 

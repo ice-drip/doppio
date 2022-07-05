@@ -41,60 +41,86 @@ export abstract class Doppio {
     return connectionRtt === undefined ? false : connectionRtt === 0;
   }
 
-  public static check() {
-    return new Promise<HeadlessType>((resolve, _reject) => {
-      navigator.permissions
-        .query({ name: "notifications" })
-        .then((permissionStatus) => {
-          const trueType = [];
-          if (
-            Notification.permission === "denied" &&
-            permissionStatus.state === "prompt"
-          ) {
-            trueType.push("permission");
-          }
-          if (this.testUserAgent()) {
-            trueType.push("user_agent");
-          }
-          if (this.testAppVersion()) {
-            trueType.push("app_version");
-          }
-          if (this.testPlugins()) {
-            trueType.push("test_plugin");
-          }
-          if (this.testMime()) {
-            trueType.push("mime_type");
-          }
-          if (this.testLanguages()) {
-            trueType.push("language");
-          }
-          if (this.testWebdriver()) {
-            trueType.push("web_driver");
-          }
-          if (this.testOuter()) {
-            trueType.push("outer");
-          }
-          if (this.testConnectionRtt()) {
-            trueType.push("connection_rtt");
-          }
-          if (trueType.length > 0) {
-            resolve({ headless: true, type: trueType });
-          } else {
-            resolve({ headless: false, type: [] });
-          }
-        });
-    });
+  private static list_run(): string[] {
+    const trueType: string[] = [];
+    if (this.testUserAgent()) {
+      trueType.push("user_agent");
+    }
+    if (this.testAppVersion()) {
+      trueType.push("app_version");
+    }
+    if (this.testPlugins()) {
+      trueType.push("test_plugin");
+    }
+    if (this.testMime()) {
+      trueType.push("mime_type");
+    }
+    if (this.testLanguages()) {
+      trueType.push("language");
+    }
+    if (this.testWebdriver()) {
+      trueType.push("web_driver");
+    }
+    if (this.testOuter()) {
+      trueType.push("outer");
+    }
+    if (this.testConnectionRtt()) {
+      trueType.push("connection_rtt");
+    }
+    return trueType;
   }
 
-  public static shut_up(message:string="Please use a regular browser to access"){
-    this.check().then(res=>{
-        if(res.headless){
-            document.body.remove();
-            alert(message);
-        }else{
-            console.info("Doppio: your are a human");
+  public static check() {
+    if (!/(AppleWebKit)/i.test(navigator.userAgent)) {
+      return new Promise<HeadlessType>((resolve, _reject) => {
+        navigator.permissions
+          .query({ name: "notifications" })
+          .then((permissionStatus) => {
+            const trueType = [];
+            if (
+              Notification.permission === "denied" &&
+              permissionStatus.state === "prompt"
+            ) {
+              trueType.push("permission");
+            }
+            const list_run = this.list_run();
+            if (list_run.length) {
+              trueType.push(...list_run);
+            }
+            if (trueType.length > 0) {
+              resolve({ headless: true, type: trueType });
+            } else {
+              resolve({ headless: false, type: [] });
+            }
+          });
+      });
+    } else {
+      return new Promise<HeadlessType>((resolve) => {
+        const trueType = [];
+        const list_run = this.list_run();
+        if (list_run.length) {
+          trueType.push(...list_run);
         }
-    })
+        if (trueType.length > 0) {
+          resolve({ headless: true, type: trueType });
+        } else {
+          resolve({ headless: false, type: [] });
+        }
+      });
+    }
+  }
+
+  public static shut_up(
+    message: string = "Please use a regular browser to access"
+  ) {
+    this.check().then((res) => {
+      if (res.headless) {
+        document.body.remove();
+        alert(message);
+      } else {
+        console.info("Doppio: your are a human");
+      }
+    });
   }
 }
 
